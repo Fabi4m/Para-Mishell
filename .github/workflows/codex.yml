@@ -1,0 +1,37 @@
+name: Codex AI Developer
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  codex:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run Codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: |
+            The user created this GitHub issue:
+
+            "${{ github.event.issue.title }}"
+
+            Modify the repository to implement the request.
+            Create the necessary files and update index.html if needed.
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Codex automatic update"
+          title: "Codex AI changes"
+          body: "Changes generated automatically by Codex"
+          branch: codex-update
