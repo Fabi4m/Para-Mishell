@@ -60,11 +60,18 @@
       cursor: pointer;
     }
 
-    .mensaje-error {
+    .mensaje-estado {
       margin: 10px 0 0;
-      color: #d12d2d;
       font-size: 0.85rem;
       min-height: 1em;
+    }
+
+    .mensaje-estado.error {
+      color: #d12d2d;
+    }
+
+    .mensaje-estado.exito {
+      color: #1c9b3b;
     }
 
     .contenido {
@@ -82,33 +89,48 @@
   <div class="pantalla-acceso" id="pantallaAcceso">
     <div class="recuadro-codigo">
       <h2>Ingresa el código de acceso</h2>
-      <input id="codigoInput" type="password" placeholder="Código" />
+      <input id="codigoInput" type="password" placeholder="Código de 4 dígitos" maxlength="4" inputmode="numeric" />
       <button id="btnAcceder" type="button">Acceder</button>
-      <p id="mensajeError" class="mensaje-error"></p>
+      <p id="mensajeEstado" class="mensaje-estado"></p>
     </div>
   </div>
 
   <main id="contenido" class="contenido" aria-hidden="true">
-    <h1>Bienvenido a mi página</h1>
-    <p>Esta es mi primera web.</p>
+    <h1>Bienvenido</h1>
+    <p>Has ingresado correctamente a la página principal.</p>
   </main>
 
   <script>
-    const ACCESS_CODE = "1234";
+    const CODIGOS_VALIDOS = {
+      administrador: "2303",
+      usuario: "2868",
+    };
     const pantallaAcceso = document.getElementById("pantallaAcceso");
     const codigoInput = document.getElementById("codigoInput");
     const btnAcceder = document.getElementById("btnAcceder");
-    const mensajeError = document.getElementById("mensajeError");
+    const mensajeEstado = document.getElementById("mensajeEstado");
     const contenido = document.getElementById("contenido");
 
+    function mostrarMensaje(texto, tipo) {
+      mensajeEstado.textContent = texto;
+      mensajeEstado.className = `mensaje-estado ${tipo}`;
+    }
+
+    function abrirPaginaPrincipal() {
+      pantallaAcceso.style.display = "none";
+      contenido.classList.add("visible");
+      contenido.setAttribute("aria-hidden", "false");
+    }
+
     function validarCodigo() {
-      if (codigoInput.value === ACCESS_CODE) {
-        pantallaAcceso.style.display = "none";
-        contenido.classList.add("visible");
-        contenido.setAttribute("aria-hidden", "false");
-        mensajeError.textContent = "";
+      const codigoIngresado = codigoInput.value.trim();
+      const esCodigoValido = Object.values(CODIGOS_VALIDOS).includes(codigoIngresado);
+
+      if (esCodigoValido) {
+        mostrarMensaje("Ingreso exitoso", "exito");
+        setTimeout(abrirPaginaPrincipal, 900);
       } else {
-        mensajeError.textContent = "Código incorrecto. Intenta de nuevo.";
+        mostrarMensaje("Código incorrecto. Intenta de nuevo.", "error");
       }
     }
 
