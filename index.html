@@ -1,12 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<title>Mi página</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi página</title>
+  <style>
+    :root {
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f0f2f5;
+    }
+
+    .pantalla-acceso {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 10;
+    }
+
+    .recuadro-codigo {
+      width: min(280px, 85vw);
+      padding: 18px;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+      text-align: center;
+    }
+
+    .recuadro-codigo h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .recuadro-codigo input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #c8c8c8;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .recuadro-codigo button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #2f6fed;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mensaje-error {
+      margin: 10px 0 0;
+      color: #d12d2d;
+      font-size: 0.85rem;
+      min-height: 1em;
+    }
+
+    .contenido {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .contenido.visible {
+      display: block;
+    }
+  </style>
 </head>
-
 <body>
-<h1>Bienvenido a mi página</h1>
-<p>Esta es mi primera web.</p>
-</body>
+  <div class="pantalla-acceso" id="pantallaAcceso">
+    <div class="recuadro-codigo">
+      <h2>Ingresa el código de acceso</h2>
+      <input id="codigoInput" type="password" placeholder="Código" />
+      <button id="btnAcceder" type="button">Acceder</button>
+      <p id="mensajeError" class="mensaje-error"></p>
+    </div>
+  </div>
 
+  <main id="contenido" class="contenido" aria-hidden="true">
+    <h1>Bienvenido a mi página</h1>
+    <p>Esta es mi primera web.</p>
+  </main>
+
+  <script>
+    const ACCESS_CODE = "1234";
+    const pantallaAcceso = document.getElementById("pantallaAcceso");
+    const codigoInput = document.getElementById("codigoInput");
+    const btnAcceder = document.getElementById("btnAcceder");
+    const mensajeError = document.getElementById("mensajeError");
+    const contenido = document.getElementById("contenido");
+
+    function validarCodigo() {
+      if (codigoInput.value === ACCESS_CODE) {
+        pantallaAcceso.style.display = "none";
+        contenido.classList.add("visible");
+        contenido.setAttribute("aria-hidden", "false");
+        mensajeError.textContent = "";
+      } else {
+        mensajeError.textContent = "Código incorrecto. Intenta de nuevo.";
+      }
+    }
+
+    btnAcceder.addEventListener("click", validarCodigo);
+    codigoInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        validarCodigo();
+      }
+    });
+  </script>
+</body>
 </html>
