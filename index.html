@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi página</title>
   <style>
+    @font-face {
+      font-family: "BALQIS";
+      src: local("BALQIS"), local("Balqis");
+      font-display: swap;
+    }
+
     :root {
       font-family: Arial, sans-serif;
     }
@@ -78,6 +84,50 @@
       display: none;
       padding: 40px 20px;
       text-align: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: #ffffff;
+    }
+
+    .contenido.contenido-usuario {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .bienvenida-usuario {
+      margin: 0;
+      font-family: "BALQIS", "Lucida Calligraphy", cursive;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      letter-spacing: 0.02em;
+      color: #181818;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+
+    .descripcion-bienvenida {
+      margin: 0;
+      max-width: min(700px, 90vw);
+      text-align: center;
+      color: #2a2a2a;
+      font-family: Calibri, "Trebuchet MS", sans-serif;
+      font-size: clamp(1rem, 2.1vw, 1.25rem);
+      line-height: 1.7;
+    }
+
+    .linea-descripcion {
+      display: block;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 650ms ease, transform 650ms ease;
+    }
+
+    .mostrar {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .contenido.visible {
@@ -96,8 +146,8 @@
   </div>
 
   <main id="contenido" class="contenido" aria-hidden="true">
-    <h1>Bienvenido</h1>
-    <p>Has ingresado correctamente a la página principal.</p>
+    <h1 id="tituloPrincipal">Bienvenido</h1>
+    <p id="descripcionPrincipal">Has ingresado correctamente a la página principal.</p>
   </main>
 
   <script>
@@ -110,25 +160,55 @@
     const btnAcceder = document.getElementById("btnAcceder");
     const mensajeEstado = document.getElementById("mensajeEstado");
     const contenido = document.getElementById("contenido");
+    const tituloPrincipal = document.getElementById("tituloPrincipal");
+    const descripcionPrincipal = document.getElementById("descripcionPrincipal");
 
     function mostrarMensaje(texto, tipo) {
       mensajeEstado.textContent = texto;
       mensajeEstado.className = `mensaje-estado ${tipo}`;
     }
 
-    function abrirPaginaPrincipal() {
+    function abrirPaginaPrincipal(tipoUsuario) {
       pantallaAcceso.style.display = "none";
       contenido.classList.add("visible");
       contenido.setAttribute("aria-hidden", "false");
+
+      if (tipoUsuario === "usuario") {
+        document.title = "Inicio de usuario";
+        contenido.classList.add("contenido-usuario");
+
+        tituloPrincipal.textContent = "Bienvenida, Mishell Valencia";
+        tituloPrincipal.className = "bienvenida-usuario";
+
+        descripcionPrincipal.className = "descripcion-bienvenida";
+        descripcionPrincipal.innerHTML = [
+          "Dios te bendiga, mi querida y amada mujer,",
+          "dueña de mi corazón. Hice esta página para ti",
+          "con mucho amor y cariño, con el objetivo de",
+          "mantener recuerdos de los dos para nosotros",
+          "y para nuestros hijos. ¡Disfruta!",
+        ]
+          .map((linea, indice) => `<span class=\"linea-descripcion\" style=\"transition-delay:${450 + indice * 180}ms\">${linea}</span>`)
+          .join("");
+
+        requestAnimationFrame(() => {
+          tituloPrincipal.classList.add("mostrar");
+          descripcionPrincipal.querySelectorAll(".linea-descripcion").forEach((linea) => {
+            linea.classList.add("mostrar");
+          });
+        });
+      }
     }
 
     function validarCodigo() {
       const codigoIngresado = codigoInput.value.trim();
-      const esCodigoValido = Object.values(CODIGOS_VALIDOS).includes(codigoIngresado);
+      const tipoUsuario = Object.keys(CODIGOS_VALIDOS).find(
+        (tipo) => CODIGOS_VALIDOS[tipo] === codigoIngresado
+      );
 
-      if (esCodigoValido) {
+      if (tipoUsuario) {
         mostrarMensaje("Ingreso exitoso", "exito");
-        setTimeout(abrirPaginaPrincipal, 900);
+        setTimeout(() => abrirPaginaPrincipal(tipoUsuario), 900);
       } else {
         mostrarMensaje("Código incorrecto. Intenta de nuevo.", "error");
       }
