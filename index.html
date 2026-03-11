@@ -133,6 +133,24 @@
     .contenido.visible {
       display: block;
     }
+
+    .contenido.visible.contenido-usuario {
+      display: flex;
+    }
+
+    @media (min-width: 1024px) {
+      .contenido.contenido-usuario {
+        align-items: flex-start;
+        justify-content: center;
+        text-align: left;
+        padding: 72px 80px;
+      }
+
+      .descripcion-bienvenida {
+        max-width: 760px;
+        text-align: left;
+      }
+    }
   </style>
 </head>
 <body>
