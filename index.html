@@ -90,6 +90,7 @@
     }
 
     .contenido.contenido-usuario {
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -205,17 +206,14 @@
           "mantener recuerdos de los dos para nosotros",
           "y para nuestros hijos. ¡Disfruta!",
         ]
-          .map((linea, indice) => `<span class=\"linea-descripcion\" style=\"transition-delay:${indice * 180}ms\">${linea}</span>`)
+          .map((linea, indice) => `<span class=\"linea-descripcion\" style=\"transition-delay:${450 + indice * 180}ms\">${linea}</span>`)
           .join("");
 
         requestAnimationFrame(() => {
           tituloPrincipal.classList.add("mostrar");
-
-          setTimeout(() => {
-            descripcionPrincipal.querySelectorAll(".linea-descripcion").forEach((linea) => {
-              linea.classList.add("mostrar");
-            });
-          }, 2000);
+          descripcionPrincipal.querySelectorAll(".linea-descripcion").forEach((linea) => {
+            linea.classList.add("mostrar");
+          });
         });
       }
     }
